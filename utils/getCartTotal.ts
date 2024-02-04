@@ -5,6 +5,10 @@ type CartItems={
     price: number;
 }
 
-export const getCartTotal = (cart: CartItems[]) => {
-    
+const Total = (cart: CartItems[]) => {
+  let sum = 0;
+  cart.map((item) => {
+    sum += item.qty * item.price;
+  });
+  return sum;
 }
