@@ -9,6 +9,8 @@ import { useAuth } from "../context/Auth";
 import { useNavigation } from "@react-navigation/native";
 import Login from "./Login";
 import Register from "./Register";
+import getCurrentUser from "../middleware/currentUser";
+import { useState } from "react";
 
 const Stack=createNativeStackNavigator()
 
@@ -61,7 +63,6 @@ const ProductHomeView=()=>{
 }
 
 const Recommended=()=>{
-    const products=useProduct() as any[]
     return(
         <View style={[layout.columnSpaceBetween,{gap:10,alignItems:'flex-start'}]}>
             <Text style={[sizes.heading2,{fontFamily:'Inter',color:'#000'}]}>Recommended for you</Text>
@@ -74,9 +75,10 @@ const Recommended=()=>{
 
 const HomeNavigator=()=>{
     const {user}=useAuth()
+    console.log(user)
     return(
     <Stack.Navigator>
-        {!user?(<>  
+        {user?(<>  
         <Stack.Screen name="HomeScreen" component={Home} options={{headerShown:false}}/>
         <Stack.Screen name="Product" component={Product}/>
         </>):(
@@ -90,9 +92,15 @@ const HomeNavigator=()=>{
 }
 
 function Home(){
+    const {user}=useAuth()
+    const [name,setName]=useState()
+    // Implement UseEffect to get the current user
+    const currUser=getCurrentUser(user).then((res)=>setName(res.name)).catch((err)=>err)
+
+    console.log(currUser)
     return(
         <ScrollView style={[styles.container,{gap:10}]}>
-            <Header name="Michael"/>
+            <Header name={name}/>
             <Hero/>
             <Recommended/>
         </ScrollView>

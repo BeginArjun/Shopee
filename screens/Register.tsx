@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { TextInput, View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { color } from "../styles"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useAuth } from "../context/Auth"
 
 const RegisterForm=()=>{
     const [values,setValues]=useState({name:'',email:'',password:'',phoneNo:'',address:''})
-
+    const {setUser}=useAuth()
     const handleSubmit=async()=>{
         const res=await fetch('http://192.168.137.1:3000/api/user/create',{
             method:'POST',
@@ -13,6 +15,12 @@ const RegisterForm=()=>{
             },
             body:JSON.stringify(values)
         })
+        const data=res.headers.get('set-cookie')
+        const tokenContainer=data?.split(';')[0]
+        const token=tokenContainer?.split('=')[1]
+        await AsyncStorage.setItem('jwt',token)
+        console.log(token)
+        setUser(token)
     }
 
     return(
@@ -24,6 +32,7 @@ const RegisterForm=()=>{
                 value={values.name}
                 onChangeText={(text)=>setValues({...values,name:text})}
                 placeholderTextColor={color.contentSecondary.color}
+                style={styles.field}
                 />
             </View>
             <View style={styles.fields}>
@@ -33,6 +42,7 @@ const RegisterForm=()=>{
                 value={values.email}
                 onChangeText={(text)=>setValues({...values,email:text})}
                 placeholderTextColor={color.contentSecondary.color}
+                style={styles.field}
                 />
             </View>
             <View style={styles.fields}>
@@ -42,6 +52,7 @@ const RegisterForm=()=>{
                 value={values.password}
                 onChangeText={(text)=>setValues({...values,password:text})}
                 placeholderTextColor={color.contentSecondary.color}
+                style={styles.field}
                 secureTextEntry
                 />
             </View>
@@ -52,6 +63,7 @@ const RegisterForm=()=>{
                 value={values.address}
                 onChangeText={(text)=>setValues({...values,address:text})}
                 placeholderTextColor={color.contentSecondary.color}
+                style={styles.field}
                 />
             </View>
             <TouchableOpacity style={[styles.registerButton,color.backgroundAccent]}
@@ -93,5 +105,8 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         gap:10
+    },
+    field:{
+        color:color.contentPrimary.color,
     }
 })
