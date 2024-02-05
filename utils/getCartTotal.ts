@@ -10,5 +10,5 @@ const Total = (cart: CartItems[]) => {
   cart.map((item) => {
     sum += item.qty * item.price;
   });
-  return sum.toPrecision(2);
+  return Number.parseInt(sum.toFixed(2));
 }
