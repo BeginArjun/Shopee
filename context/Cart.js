@@ -21,7 +21,7 @@ export default function CartProvider({children}){
             setCart(data)
         }
         fetchData()
-    },[])
+    },[user])
     return( 
         <context.Provider value={{cart,setCart}}>
             {children}

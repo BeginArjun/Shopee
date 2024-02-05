@@ -13,8 +13,7 @@ const ProductDisplay=({image,id}:{image:string,id:string})=>{
             <Image source={{uri:image}} width={298} height={315}/>
             <View style={styles.imageDisplayIcons}>
                 <FavouriteBtn/>
-                <CartBtn userId='d6b94b5f-bc33-406a-859f-a71bb5438b56'
-                cartId='54d29d80-e84b-4b48-ba96-c0ec63b6ba83'
+                <CartBtn 
                 productId={id}
                 />
             </View>

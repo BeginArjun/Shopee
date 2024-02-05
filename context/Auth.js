@@ -9,7 +9,7 @@ export default function AuthProvider({children}){
         const getJWT=async()=>{
             try{
                 const token=await AsyncStorage.getItem('jwt')
-                const tokenVal=token!=null?JSON.parse(token):null
+                const tokenVal=token!=null?token:null
                 setUser(tokenVal)
             }
             catch(err){

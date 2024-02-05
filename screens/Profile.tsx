@@ -6,7 +6,6 @@ import { useAuth } from '../context/Auth';
 import { useEffect ,useState} from 'react';
 import getCurrentUser from '../middleware/currentUser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 type Settings={
@@ -22,17 +21,6 @@ const ProfileSettings:Settings[]=[
     {
         name:'My Orders'
     },
-    {
-        name:'Sign Out',
-        action:async()=>{
-            const navigation=useNavigation()
-            await AsyncStorage.removeItem('jwt')
-            const {setUser}:any=useAuth()
-            setUser(null)
-            navigation.navigate('Home')
-        },
-        textColor:'red'
-    }
 ]
 
 const ProfileHeader=({name,email}:{name:string,email:string})=>{
@@ -59,12 +47,19 @@ const ListItems=({name,action,textColor}:Settings)=>{
 }
 
 const ProfileOptions=()=>{
+    const {setUser}=useAuth()
     return(
+        <View>
         <FlatList
         data={ProfileSettings}
         keyExtractor={(item)=>item.name}
         renderItem={({item})=><ListItems {...item}/>}
         />
+        <ListItems name='Logout' action={async()=>{
+            await AsyncStorage.removeItem('jwt')
+            setUser(null)
+        }} textColor={'red'}/>
+        </View>
     )
 }
 

@@ -14,7 +14,7 @@ type ProductCardProps = {
 
 
 
-export const HorizontalCartCard=({id,product,price,display_images,caption,qty}:ProductCardProps)=>{
+export const HorizontalCartCard=({id,display_images,product,qty,caption,price}:ProductCardProps)=>{
     return(
         <View style={[styles.cartCard]}>
             <View style={styles.cartCardInfo}>
@@ -29,7 +29,7 @@ export const HorizontalCartCard=({id,product,price,display_images,caption,qty}:P
                     <Text style={[color.contentSecondary,sizes.caption1,{fontWeight:'400'}]}>{caption}</Text>
                 </View>
             </View>
-
+            <Text>{qty}</Text>
             <View>
                 <ProductCounter/>
             </View>

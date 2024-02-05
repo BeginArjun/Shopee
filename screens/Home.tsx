@@ -11,6 +11,7 @@ import Login from "./Login";
 import Register from "./Register";
 import getCurrentUser from "../middleware/currentUser";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack=createNativeStackNavigator()
 
@@ -75,7 +76,6 @@ const Recommended=()=>{
 
 const HomeNavigator=()=>{
     const {user}=useAuth()
-    console.log(user)
     return(
     <Stack.Navigator>
         {user?(<>  
@@ -96,8 +96,6 @@ function Home(){
     const [name,setName]=useState()
     // Implement UseEffect to get the current user
     const currUser=getCurrentUser(user).then((res)=>setName(res.name)).catch((err)=>err)
-
-    console.log(currUser)
     return(
         <ScrollView style={[styles.container,{gap:10}]}>
             <Header name={name}/>
