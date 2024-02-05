@@ -4,6 +4,7 @@ import cartImg from '../assets/icons/cart.png'
 import { color } from "../styles"
 import { useEffect, useMemo, useState } from "react"
 import { useCart } from "../context/Cart"
+import { useAuth } from "../context/Auth"
 
 export const FavouriteBtn=()=>{
     return(
@@ -13,20 +14,20 @@ export const FavouriteBtn=()=>{
     )
 }
 
-export const CartBtn=({userId,productId,cartId}:{userId:string,productId:string,cartId})=>{
+export const CartBtn=({productId}:{productId:string})=>{
     const {cart,setCart}=useCart()
+    const {user}=useAuth()
     const addToCart=async()=>{
-        const API_URL=`http://192.168.137.1:3000/api/cart/${userId}?product=${productId}`
+        const API_URL=`http://192.168.137.1:3000/api/cart?product=${productId}`
         const res=await fetch(API_URL,{
             method:'PATCH',
             headers:{
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization':`Bearer ${user}`
             }
         })
-        const response=await fetch(`http://192.168.137.1:3000/api/cart/${cartId}`)
-        const data=await response.json()
+        const data=await res.json()
         setCart(data)
-        console.log(cart)
 
     }
     return(

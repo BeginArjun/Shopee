@@ -18,8 +18,8 @@ const RegisterForm=()=>{
         const data=res.headers.get('set-cookie')
         const tokenContainer=data?.split(';')[0]
         const token=tokenContainer?.split('=')[1]
+        console.log("Token: ",token)
         await AsyncStorage.setItem('jwt',token)
-        console.log(token)
         setUser(token)
     }
 
@@ -57,11 +57,11 @@ const RegisterForm=()=>{
                 />
             </View>
             <View style={styles.fields}>
-                <Text style={color.contentPrimary}>Address :</Text>
+                <Text style={color.contentPrimary}>Phone Number :</Text>
                 <TextInput
-                placeholder='Address'
-                value={values.address}
-                onChangeText={(text)=>setValues({...values,address:text})}
+                placeholder='Phone Number'
+                value={values.phoneNo}
+                onChangeText={(text)=>setValues({...values,phoneNo:text})}
                 placeholderTextColor={color.contentSecondary.color}
                 style={styles.field}
                 />
