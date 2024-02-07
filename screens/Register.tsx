@@ -15,7 +15,10 @@ const RegisterForm=()=>{
             },
             body:JSON.stringify(values)
         })
+        const json=await res.json()
+        console.log(json)
         const data=res.headers.get('set-cookie')
+        console.log("Res ",res)
         const tokenContainer=data?.split(';')[0]
         const token=tokenContainer?.split('=')[1]
         console.log("Token: ",token)

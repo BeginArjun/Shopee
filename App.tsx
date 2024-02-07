@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 
 import Home from './screens/Home'
@@ -11,6 +11,9 @@ import Favourites from './screens/Favourites';
 import TabHeader from './components/TabHeader';
 import ProductProvider from './context/Product';
 import AuthProvider from './context/Auth';
+import { Provider } from 'react-redux';
+import store from './store/store';
+import FavProvider from './context/Fav';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,11 +24,11 @@ const AppNavigator=()=>{
         <Tab.Group screenOptions={{headerShown:false}}>
           <Tab.Screen name="Home" component={Home}/>
           <Tab.Screen name="Browse" component={Browse}/>
+          <Tab.Screen name="Cart" component={Cart}/>
+          <Tab.Screen name="Profile" component={Profile}/>
         </Tab.Group>
         <Tab.Group>
           <Tab.Screen name="Favourites" component={Favourites}/>
-          <Tab.Screen name="Cart" component={Cart}/>
-          <Tab.Screen name="Profile" component={Profile}/>
         </Tab.Group>
       </Tab.Navigator>
     </NavigationContainer>
@@ -34,10 +37,16 @@ const AppNavigator=()=>{
 
 export default function App(){
   return(
+    <StrictMode>
     <AuthProvider>
       <ProductProvider>
-        <AppNavigator />
+        <Provider store={store}>
+          <FavProvider>
+            <AppNavigator />
+        </FavProvider>
+        </Provider>
       </ProductProvider>
     </AuthProvider>
+    </StrictMode>
   )
 }

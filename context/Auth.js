@@ -8,9 +8,9 @@ export default function AuthProvider({children}){
     useEffect(()=>{
         const getJWT=async()=>{
             try{
-                const token=await AsyncStorage.getItem('jwt')
-                const tokenVal=token!=null?token:null
-                setUser(tokenVal)
+                let token=await AsyncStorage.getItem('jwt')
+                console.log(token)
+                setUser(token)
             }
             catch(err){
                 console.log(err)

@@ -1,7 +1,7 @@
 import { Text, View,TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { useAuth } from '../context/Auth';
 import { useNavigation } from '@react-navigation/native';
-import { useMemo,useState } from 'react';
+import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color, sizes } from '../styles';
 
@@ -9,24 +9,22 @@ const LoginForm=()=>{
     const {setUser}=useAuth()
     const [values,setValues]=useState({email:'',password:''})
     const navigation=useNavigation()
-    const handleSubmit=()=>{
-        const login=async()=>{
-            const res=await fetch('http://192.168.137.1:3000/api/user/login',{
-                method:'POST',
-                credentials:'include',
-                headers:{
-                    'Content-Type':'application/json',
-                    'Accept':'application/json',
-                    
-                },
-                body:JSON.stringify(values)
-            })
-            const data=await res.json()
-            console.log(data)
-            setUser(data)
-            await AsyncStorage.setItem('jwt',JSON.stringify(data))
-        }
-        login()
+    const handleSubmit=async()=>{
+        const res = await fetch('http://192.168.137.1:3000/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+
+            },
+            body: JSON.stringify(values)
+        })
+        const data = res.headers.get('set-cookie')
+        const tokenContainer = data?.split(';')[0]
+        const token = tokenContainer?.split('=')[1]
+        console.log("Token: ", token)
+        await AsyncStorage.setItem('jwt', token)
+        setUser(token)
         console.log("Pressed")
     }
     return(
@@ -69,10 +67,6 @@ const LoginForm=()=>{
 
 export default function Login() {
     const {user}=useAuth()
-    const navigation=useNavigation()
-    // if(user){
-    //     navigation.goBack()
-    // }
     return (
         <View style={styles.container}>
            <LoginForm/>

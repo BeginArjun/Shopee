@@ -7,19 +7,21 @@ import { useEffect ,useState} from 'react';
 import getCurrentUser from '../middleware/currentUser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import Order from './Order';
 
 type Settings={
     name:string,
     action?:()=>void,
-    textColor?:string
+    textColor?:string,
+    navigateTo?:string
+    params?:Object
 }
 
 const ProfileSettings:Settings[]=[
     {
-        name:'Personal Information',
-    },
-    {
-        name:'My Orders'
+        name:'My Orders',
+        navigateTo:'My Orders',
     },
 ]
 
@@ -35,11 +37,25 @@ const ProfileHeader=({name,email}:{name:string,email:string})=>{
     )
 }
 
-const ListItems=({name,action,textColor}:Settings)=>{
+const ListItems=({name,action,textColor,navigateTo,params}:Settings)=>{
     const textC=textColor?textColor:color.contentPrimary.color
+    const {navigate}:any=useNavigation()
+    const handleClick=()=>{
+        if(action){
+            action()
+        }
+        if(navigateTo && params){
+            navigate(navigateTo,params)
+        }
+        else if(navigateTo){    
+            navigate(navigateTo)
+        }
+
+    }
+
     return(
     <TouchableOpacity style={styles.profileOptions}
-    onPress={()=>action?action():console.log('Pressed')}
+    onPress={()=>handleClick()}
     >
             <Text style={[sizes.heading2,{fontWeight:'600',color:textC}]}>{name}</Text>
             <Image source={chevronRight} width={8} height={14}/>
@@ -47,7 +63,8 @@ const ListItems=({name,action,textColor}:Settings)=>{
 }
 
 const ProfileOptions=()=>{
-    const {setUser}=useAuth()
+    const {setUser}:any=useAuth()
+    const navigation:any=useNavigation()
     return(
         <View>
         <FlatList
@@ -58,6 +75,7 @@ const ProfileOptions=()=>{
         <ListItems name='Logout' action={async()=>{
             await AsyncStorage.removeItem('jwt')
             setUser(null)
+            navigation.navigate('Home')
         }} textColor={'red'}/>
         </View>
     )
@@ -65,10 +83,10 @@ const ProfileOptions=()=>{
 
 function Profile() {
     const {user}:any=useAuth()
-    const [data,setData]=useState({})
+    const [data,setData]=useState<User | any>({})
     useEffect(()=>{
         const getCurr=async()=>{
-            const curr=await getCurrentUser(user)
+            const curr:User=await getCurrentUser(user)
             setData(curr)
         }
         getCurr()
@@ -87,10 +105,12 @@ export const ProfileNavigator=()=>{
     return(
         <Stack.Navigator>
             <Stack.Group>
-                <Stack.Screen name='ProfileScreen' component={Profile} options={{headerShown:false}}/>
+                <Stack.Screen name='My Profile' component={Profile}/>
                 {/* <Stack.Screen name='Personal Information' component={Profile}/> */}
             </Stack.Group>
-            
+            <Stack.Group>
+                <Stack.Screen name='My Orders' component={Order}/>
+            </Stack.Group>
         </Stack.Navigator>
     )
 }

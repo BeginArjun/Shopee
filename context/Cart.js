@@ -1,10 +1,13 @@
-import { createContext, useContext, useEffect, useMemo,useState } from "react";
+import { createContext, useContext, useEffect,useState } from "react";
 import { useAuth } from "./Auth";
+import { useDispatch, useSelector } from 'react-redux';
+import { setCart } from '../store/slice/cartSlice'; 
 
 const context=createContext({})
 
 export default function CartProvider({children}){
-    const [cart,setCart]=useState()
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cart);
     const {user}=useAuth()
     useEffect(()=>{
         const API_URL=`http://192.168.137.1:3000/api/cart/`
@@ -18,12 +21,27 @@ export default function CartProvider({children}){
                 }
             })
             const data=await response.json()
-            setCart(data)
+            
+            if(data && data.cartItems){
+                const updatedCartItems = data.cartItems.map(cartItem => ({
+                    id: cartItem.id,
+                    qty: cartItem.quantity,
+                    productId: cartItem.product.id,
+                    product: cartItem.product.product,
+                    price: cartItem.product.price,
+                    display_images: cartItem.product.display_images,
+                    caption: cartItem.product.caption 
+                }));
+                dispatch(setCart(updatedCartItems));
+            }
+            else{
+                dispatch(setCart([]));
+            }
         }
         fetchData()
-    },[user])
+    },[dispatch])
     return( 
-        <context.Provider value={{cart,setCart}}>
+        <context.Provider value={{cart,dispatch}}>
             {children}
         </context.Provider>
     )

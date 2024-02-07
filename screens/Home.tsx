@@ -42,7 +42,7 @@ const Hero=()=>{
 }
 
 const ProductHomeView=()=>{
-    const products=useProduct() as any[]
+    const products=useProduct() as Product[]
     return(
         <View style={styles.productView}>
             {
@@ -52,8 +52,8 @@ const ProductHomeView=()=>{
                             key={idx}
                             product={product.product}
                             price={product.price}
-                            image={product.display_images}
-                            subtitle={product.caption}
+                            display_images={product.display_images}
+                            caption={product.caption}
                             id={product.id}
                         />
                     )

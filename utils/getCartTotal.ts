@@ -8,7 +8,9 @@ type CartItems={
 export const getCartTotal = (cart: CartItems[]) => {
   let sum = 0;
   cart.map((item) => {
+    console.log(item.qty)
     sum += item.qty * item.price;
+    console.log(sum)
   });
-  return Number.parseInt(sum.toFixed(2));
+  return Number.parseInt(sum.toPrecision());
 }

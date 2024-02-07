@@ -5,6 +5,49 @@ import search from '../assets/icons/search.png'
 import heart from '../assets/icons/heart.png'
 import cart from '../assets/icons/cart.png'
 import profile from '../assets/icons/profile.png'
+import { useSelector } from "react-redux";
+
+const FavLength=()=>{
+    const fav=useSelector((state)=>state.favourite)
+    return(
+        <View
+        style={{
+            position:'absolute',
+            top:-5,
+            right:1,
+            width:20,
+            height:20,
+            borderRadius:21,
+            backgroundColor:'#212429',
+            alignItems:'center',
+            justifyContent:'center',
+        }}
+        >
+            <Text>{fav.length}</Text>
+        </View>
+    )
+}
+
+const CartLength=()=>{
+    const cart=useSelector((state)=>state.cart)
+    return(
+        <View
+        style={{
+            position:'absolute',
+            top:-5,
+            right:1,
+            width:20,
+            height:20,
+            borderRadius:21,
+            backgroundColor:'#212429',
+            alignItems:'center',
+            justifyContent:'center',
+        }}
+        >
+            <Text>{cart.length}</Text>
+        </View>
+    )
+}
 
 const TabHeader=({state,descriptors,navigation})=>{
     return(
@@ -84,8 +127,11 @@ const TabHeader=({state,descriptors,navigation})=>{
                             onPress={onPress}
                             onLongPress={onLongPress}
                             style={{flex:1, alignItems:'center', justifyContent:'center'}}
+                            id={options.tabBarTestID}
                         >
                             {options.tabBarIcon({focused: isFocused, size: 25})}
+                            {route.name==='Cart'?<CartLength/>:<></>}
+                            {route.name==='Favourites'?<FavLength/>:<></>}
                             <Text style={{ color: isFocused ? '#212429' : '#999999' }}>
                                 {label}
                             </Text>
