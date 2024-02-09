@@ -35,6 +35,12 @@ const AppNavigator=()=>{
   )
 }
 
+const AppContainer=({children}){
+  return(
+    
+  )
+}
+
 export default function App(){
   return(
     <StrictMode>
